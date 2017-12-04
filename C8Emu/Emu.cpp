@@ -1,7 +1,11 @@
 #include "Emu.h"
 #include <mutex>
 
-Emu::Emu() :
+Emu::Emu(int frameWidth, int frameHeight) :
+	frameWidth(frameWidth),
+	frameHeight(frameHeight),
+	pixelWidth(frameWidth/64.0f),
+	pixelHeight(frameHeight/32.0f),
 	chip8(kbd),
 	renderThread(&Emu::Render, this),
 	isRunning(false),
@@ -12,7 +16,7 @@ Emu::Emu() :
 
 void Emu::Render()
 {
-	window = new sf::RenderWindow(sf::VideoMode(1280, 640, 1), "CHIP-8 Emulator");
+	window = new sf::RenderWindow(sf::VideoMode(frameWidth, frameHeight, 1), "CHIP-8 Emulator");
 	window->clear(sf::Color::Black);
 	window->setFramerateLimit(60);
 
@@ -40,7 +44,7 @@ void Emu::ProcessChip8Pixels()
 	for (int y = 0; y < 32; y++) {
 		for (int x = 0; x < 64; x++) {
 			if (chip8.GetPixel(x, y)) {
-				pixel.setPosition(sf::Vector2f(x * 20.0f, y * 20.0f));
+				pixel.setPosition(sf::Vector2f(x * pixelWidth, y * pixelHeight));
 				window->draw(pixel);
 			}
 		}

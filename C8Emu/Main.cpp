@@ -2,8 +2,8 @@
 
 int main() {
 
-	Emu c8Emu;
-	c8Emu.Run("c8games/PONG");
+	Emu c8Emu(1280,640);
+	c8Emu.Run("c8games/PONG2");
 
 	return 0;
 }

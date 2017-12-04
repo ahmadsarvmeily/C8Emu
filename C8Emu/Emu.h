@@ -9,7 +9,8 @@ class Emu {
 
 public:
 
-	Emu();
+	Emu(int frameWidth, int frameHeight);
+
 	~Emu() {
 		delete window;
 		window = nullptr;
@@ -20,13 +21,14 @@ public:
 	void Run(std::string gamePath);
 
 private:
-
+	int frameWidth, frameHeight;
+	float pixelWidth, pixelHeight;
 	HexKbd kbd;
 	Chip8 chip8;
 	FrameTimer ft;
 	sf::RenderWindow* window = nullptr;
 	sf::Thread renderThread;
-	sf::RectangleShape pixel = sf::RectangleShape(sf::Vector2f(20.0f, 20.0f));
+	sf::RectangleShape pixel = sf::RectangleShape(sf::Vector2f(pixelWidth, pixelHeight));
 	volatile bool isRunning;
 	volatile bool windowReady;
 };
