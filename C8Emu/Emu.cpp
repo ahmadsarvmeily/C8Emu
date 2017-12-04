@@ -16,7 +16,7 @@ Emu::Emu(int frameWidth, int frameHeight) :
 
 void Emu::Render()
 {
-	window = new sf::RenderWindow(sf::VideoMode(frameWidth, frameHeight, 1), "CHIP-8 Emulator");
+	window = std::make_unique<sf::RenderWindow>(sf::VideoMode(frameWidth, frameHeight, 1), "CHIP-8 Emulator");
 	window->clear(sf::Color::Black);
 	window->setFramerateLimit(60);
 

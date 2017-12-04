@@ -4,17 +4,13 @@
 #include "FrameTimer.h"
 #include <SFML\Graphics.hpp>
 #include <string>
+#include <memory>
 
 class Emu {
 
 public:
 
 	Emu(int frameWidth, int frameHeight);
-
-	~Emu() {
-		delete window;
-		window = nullptr;
-	}
 
 	void Render();
 	void ProcessChip8Pixels();
@@ -26,7 +22,7 @@ private:
 	HexKbd kbd;
 	Chip8 chip8;
 	FrameTimer ft;
-	sf::RenderWindow* window = nullptr;
+	std::unique_ptr<sf::RenderWindow> window = nullptr;
 	sf::Thread renderThread;
 	sf::RectangleShape pixel = sf::RectangleShape(sf::Vector2f(pixelWidth, pixelHeight));
 	volatile bool isRunning;
