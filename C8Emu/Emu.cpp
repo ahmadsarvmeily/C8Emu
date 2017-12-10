@@ -1,7 +1,9 @@
 #include "Emu.h"
 #include <mutex>
+#include <iostream>
+#include <algorithm>
 
-Emu::Emu(int frameWidth, int frameHeight, int maxFrameRate) :
+Emu::Emu(int frameWidth, int frameHeight, int maxFrameRate, bool showFPS) :
 	frameWidth(frameWidth),
 	frameHeight(frameHeight),
 	pixelWidth(frameWidth/64.0f),
@@ -11,7 +13,8 @@ Emu::Emu(int frameWidth, int frameHeight, int maxFrameRate) :
 	isRunning(false),
 	windowReady(false),
 	maxFrameRate(maxFrameRate),
-	frameInterval(1000/maxFrameRate)
+	frameInterval(1000.0f/maxFrameRate),
+	showFPS(showFPS)
 {
 	renderThread.launch();
 }
@@ -58,6 +61,10 @@ void Emu::Run(std::string gamePath)
 
 	while (!windowReady);
 
+	size_t pos = gamePath.find_last_of("/") + 1;
+	gameTitle = gamePath.substr(pos, gamePath.size());
+	window->setTitle(gameTitle + " | CHIP-8 Emulator");
+
 	isRunning = true;
 	while (window->isOpen()) {
 
@@ -68,10 +75,21 @@ void Emu::Run(std::string gamePath)
 	isRunning = false;
 }
 
-void Emu::Update(__int64 dt)
+void Emu::Update(float dt)
 {
+	if (showFPS) {
+		float frameTime = max(frameInterval, dt);
+		fpsTimer.Push(1000.0f / frameTime);
+
+		double fpsAvg2dp = floor(fpsTimer.Average() * 100.0 + 0.5) / 100.0;
+
+		size_t length = std::to_string(maxFrameRate).length();
+		std::string fpsStr = " | " + std::to_string(fpsAvg2dp).substr(0, length + 3) + " FPS";
+		window->setTitle(gameTitle + " | CHIP-8 Emulator"+fpsStr);
+	}
+	
 	if (dt < frameInterval) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(frameInterval-dt));
+		std::this_thread::sleep_for(std::chrono::milliseconds((long long)(frameInterval-dt)));
 	}
 }
 
