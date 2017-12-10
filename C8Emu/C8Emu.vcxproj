@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="Chip8.h" />
     <ClInclude Include="Emu.h" />
+    <ClInclude Include="FPSTimer.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="HexKbd.h" />
   </ItemGroup>
