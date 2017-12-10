@@ -8,14 +8,11 @@ public:
 		last = std::chrono::steady_clock::now();
 	}
 
-	__int64 Mark() {
-		using namespace std::chrono;
-		const auto old = time_point_cast<milliseconds>(last);
-		last = time_point_cast<milliseconds>(steady_clock::now());
-
-		auto dur = last - old;
-		
-		return dur.count();
+	float Mark() {
+		const auto old = last;
+		last = std::chrono::steady_clock::now();
+		const std::chrono::duration<float, std::milli> frameTime = last - old;
+		return frameTime.count();
 	}
 
 private:
