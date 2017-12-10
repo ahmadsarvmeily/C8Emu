@@ -10,7 +10,8 @@ Chip8::Chip8(HexKbd & kbd) :
 	key({}),
 	sp(0),
 	indexRegister(0),
-	drawFlag(true)
+	drawFlag(true),
+	soundFlag(false)
 	{
 
 	for (int i = 0; i < 80; ++i)
@@ -34,7 +35,6 @@ void Chip8::LoadGame(std::string gamePath) {
 
 void Chip8::EmulateCycle() {
 	opcode = memory[pc] << 8 | memory[pc + 1];
-	//std::cout << std::hex << opcode << '\n';
 
 	switch (opcode & 0xF000) {
 
@@ -304,7 +304,7 @@ void Chip8::EmulateCycle() {
 		delayTimer--;
 
 	if (soundTimer > 0) {
-		//beep
+		soundFlag = true;
 		soundTimer--;
 	}
 }

@@ -3,6 +3,7 @@
 #include "Chip8.h"
 #include "FrameTimer.h"
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 #include <string>
 #include <memory>
 #include "FPSTimer.h"
@@ -32,6 +33,8 @@ private:
 	std::unique_ptr<sf::RenderWindow> window = nullptr;
 	sf::Thread renderThread;
 	sf::RectangleShape pixel = sf::RectangleShape(sf::Vector2f(pixelWidth, pixelHeight));
+	sf::SoundBuffer soundBuffer;
+	sf::Sound sound;
 	volatile bool isRunning;
 	volatile bool windowReady;
 };

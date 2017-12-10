@@ -122,6 +122,9 @@
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="HexKbd.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\beep.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

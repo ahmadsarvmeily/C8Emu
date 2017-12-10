@@ -17,6 +17,8 @@ public:
 	bool DrawFlag() const;
 	std::uint8_t GetPixel(int x, int y);
 	bool drawFlag;
+	bool soundFlag;
+
 private:
 	std::uniform_int_distribution<int> dist;
 	std::mt19937 rng;

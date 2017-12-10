@@ -16,6 +16,8 @@ Emu::Emu(int frameWidth, int frameHeight, int maxFrameRate, bool showFPS) :
 	frameInterval(1000.0f/maxFrameRate),
 	showFPS(showFPS)
 {
+	soundBuffer.loadFromFile("beep.wav");
+	sound.setBuffer(soundBuffer);
 	renderThread.launch();
 }
 
@@ -37,6 +39,11 @@ void Emu::Render()
 		if (isRunning && chip8.drawFlag) {
 			ProcessChip8Pixels();
 		}	
+
+		if (chip8.soundFlag) {
+			sound.play();
+			chip8.soundFlag = false;
+		}
 	}
 }
 
