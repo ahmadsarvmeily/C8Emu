@@ -10,13 +10,16 @@ class Emu {
 
 public:
 
-	Emu(int frameWidth, int frameHeight);
+	Emu(int frameWidth, int frameHeight, int maxFrameRate);
 
 	void Render();
 	void ProcessChip8Pixels();
 	void Run(std::string gamePath);
+	void Update(__int64 dt);
 
 private:
+	const int maxFrameRate;
+	const int frameInterval;
 	int frameWidth, frameHeight;
 	float pixelWidth, pixelHeight;
 	HexKbd kbd;

@@ -1,7 +1,7 @@
 #include "Emu.h"
 #include <mutex>
 
-Emu::Emu(int frameWidth, int frameHeight) :
+Emu::Emu(int frameWidth, int frameHeight, int maxFrameRate) :
 	frameWidth(frameWidth),
 	frameHeight(frameHeight),
 	pixelWidth(frameWidth/64.0f),
@@ -9,7 +9,9 @@ Emu::Emu(int frameWidth, int frameHeight) :
 	chip8(kbd),
 	renderThread(&Emu::Render, this),
 	isRunning(false),
-	windowReady(false)
+	windowReady(false),
+	maxFrameRate(maxFrameRate),
+	frameInterval(1000/maxFrameRate)
 {
 	renderThread.launch();
 }
@@ -31,16 +33,13 @@ void Emu::Render()
 		
 		if (isRunning && chip8.drawFlag) {
 			ProcessChip8Pixels();
-		}
-		
-		window->display();
+		}	
 	}
 }
 
 void Emu::ProcessChip8Pixels()
 {	
-	window->clear(sf::Color::Black);
-		
+	window->clear(sf::Color::Black);	
 	for (int y = 0; y < 32; y++) {
 		for (int x = 0; x < 64; x++) {
 			if (chip8.GetPixel(x, y)) {
@@ -49,6 +48,7 @@ void Emu::ProcessChip8Pixels()
 			}
 		}
 	}
+	window->display();
 	chip8.drawFlag = false;
 }
 
@@ -56,13 +56,22 @@ void Emu::Run(std::string gamePath)
 {
 	chip8.LoadGame(gamePath);
 
-	isRunning = true;
-
 	while (!windowReady);
 
+	isRunning = true;
 	while (window->isOpen()) {
-		chip8.Update(ft.Mark());
+
+		Update(ft.Mark());
+		chip8.EmulateCycle();
 		chip8.SetKeys();
 	}
 	isRunning = false;
 }
+
+void Emu::Update(__int64 dt)
+{
+	if (dt < frameInterval) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(frameInterval-dt));
+	}
+}
+

@@ -12,7 +12,6 @@ public:
 	Chip8(HexKbd& kbd);
 
 	void LoadGame(std::string gamePath);
-	void Update(float dt);
 	void EmulateCycle();
 	void SetKeys();
 	bool DrawFlag() const;
@@ -23,8 +22,6 @@ private:
 	std::mt19937 rng;
 
 	HexKbd& kbd;
-
-	float frameTime = 0.0f;
 
 	std::uint16_t opcode;
 	std::uint16_t indexRegister;
