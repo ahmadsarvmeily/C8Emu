@@ -29,7 +29,8 @@ private:
 	Chip8 chip8;
 	FrameTimer ft;
 	FPSTimer fpsTimer;
-	std::string gameTitle;
+	std::string gameTitle, windowTitle;
+	bool titleChangeFlag;
 	std::unique_ptr<sf::RenderWindow> window = nullptr;
 	sf::Thread renderThread;
 	sf::RectangleShape pixel = sf::RectangleShape(sf::Vector2f(pixelWidth, pixelHeight));

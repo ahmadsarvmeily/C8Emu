@@ -14,7 +14,8 @@ Emu::Emu(int frameWidth, int frameHeight, int maxFrameRate, bool showFPS) :
 	windowReady(false),
 	maxFrameRate(maxFrameRate),
 	frameInterval(1000.0f/maxFrameRate),
-	showFPS(showFPS)
+	showFPS(showFPS),
+	titleChangeFlag(false)
 {
 	soundBuffer.loadFromFile("beep.wav");
 	sound.setBuffer(soundBuffer);
@@ -23,7 +24,7 @@ Emu::Emu(int frameWidth, int frameHeight, int maxFrameRate, bool showFPS) :
 
 void Emu::Render()
 {
-	window = std::make_unique<sf::RenderWindow>(sf::VideoMode(frameWidth, frameHeight, 1), "CHIP-8 Emulator");
+	window = std::make_unique<sf::RenderWindow>(sf::VideoMode(frameWidth, frameHeight), "CHIP-8 Emulator");
 	window->clear(sf::Color::Black);
 	window->setFramerateLimit(60);
 
@@ -35,6 +36,11 @@ void Emu::Render()
 			if (event.type == sf::Event::Closed)
 				window->close();
 		}
+
+		if (titleChangeFlag) {
+			window->setTitle(windowTitle);
+			titleChangeFlag = false;
+		}
 		
 		if (isRunning && chip8.drawFlag) {
 			ProcessChip8Pixels();
@@ -44,6 +50,8 @@ void Emu::Render()
 			sound.play();
 			chip8.soundFlag = false;
 		}
+		
+		window->display();
 	}
 }
 
@@ -58,7 +66,7 @@ void Emu::ProcessChip8Pixels()
 			}
 		}
 	}
-	window->display();
+	
 	chip8.drawFlag = false;
 }
 
@@ -70,7 +78,8 @@ void Emu::Run(std::string gamePath)
 
 	size_t pos = gamePath.find_last_of("/") + 1;
 	gameTitle = gamePath.substr(pos, gamePath.size());
-	window->setTitle(gameTitle + " | CHIP-8 Emulator");
+	windowTitle = gameTitle + " | CHIP-8 Emulator";
+	titleChangeFlag = true;
 
 	isRunning = true;
 	while (window->isOpen()) {
@@ -78,6 +87,7 @@ void Emu::Run(std::string gamePath)
 		Update(ft.Mark());
 		chip8.EmulateCycle();
 		chip8.SetKeys();
+
 	}
 	isRunning = false;
 }
@@ -92,7 +102,8 @@ void Emu::Update(float dt)
 
 		size_t length = std::to_string(maxFrameRate).length();
 		std::string fpsStr = " | " + std::to_string(fpsAvg2dp).substr(0, length + 3) + " FPS";
-		window->setTitle(gameTitle + " | CHIP-8 Emulator"+fpsStr);
+		windowTitle = gameTitle + " | CHIP-8 Emulator" + fpsStr;
+		titleChangeFlag = true;
 	}
 	
 	if (dt < frameInterval) {
