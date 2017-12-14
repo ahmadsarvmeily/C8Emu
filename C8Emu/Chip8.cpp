@@ -10,7 +10,6 @@ Chip8::Chip8(HexKbd & kbd) :
 	key({}),
 	sp(0),
 	indexRegister(0),
-	drawFlag(true),
 	soundFlag(false)
 	{
 
@@ -42,7 +41,6 @@ void Chip8::EmulateCycle() {
 		switch (opcode & 0x0FFF) {
 		case 0x00E0:
 			gfx = {};
-			drawFlag = true;
 			pc += 2;
 			break;
 
@@ -212,7 +210,6 @@ void Chip8::EmulateCycle() {
 			}
 		}
 
-		drawFlag = true;
 		pc += 2;
 	}
 	break;
@@ -312,10 +309,6 @@ void Chip8::EmulateCycle() {
 void Chip8::SetKeys() {
 	for (int i = 0; i < 16; i++)
 		key[i] = kbd.KeyIsPressed(i);
-}
-
-bool Chip8::DrawFlag() const {
-	return drawFlag;
 }
 
 std::uint8_t Chip8::GetPixel(int x, int y) {

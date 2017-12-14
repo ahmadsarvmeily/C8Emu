@@ -14,9 +14,7 @@ public:
 	void LoadGame(std::string gamePath);
 	void EmulateCycle();
 	void SetKeys();
-	bool DrawFlag() const;
 	std::uint8_t GetPixel(int x, int y);
-	bool drawFlag;
 	bool soundFlag;
 
 private:

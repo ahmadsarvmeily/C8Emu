@@ -41,8 +41,10 @@ void Emu::Render()
 			window->setTitle(windowTitle);
 			titleChangeFlag = false;
 		}
-		
-		if (isRunning && chip8.drawFlag) {
+
+		window->clear(sf::Color::Black);	
+
+		if (isRunning) {
 			ProcessChip8Pixels();
 		}	
 
@@ -57,7 +59,6 @@ void Emu::Render()
 
 void Emu::ProcessChip8Pixels()
 {	
-	window->clear(sf::Color::Black);	
 	for (int y = 0; y < 32; y++) {
 		for (int x = 0; x < 64; x++) {
 			if (chip8.GetPixel(x, y)) {
@@ -66,8 +67,6 @@ void Emu::ProcessChip8Pixels()
 			}
 		}
 	}
-	
-	chip8.drawFlag = false;
 }
 
 void Emu::Run(std::string gamePath)
